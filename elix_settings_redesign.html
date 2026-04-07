@@ -1,0 +1,270 @@
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .overlay {
+    background: rgba(20,18,16,0.75);
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+    border-radius: 14px;
+    font-family: 'Georgia', serif;
+  }
+
+  .modal {
+    background: #38362f;
+    border: 0.5px solid rgba(153,60,29,0.25);
+    border-radius: 18px;
+    width: 100%;
+    max-width: 480px;
+    overflow: hidden;
+  }
+
+  /* Header */
+  .modal-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 22px 24px 20px;
+    border-bottom: 0.5px solid rgba(255,255,255,0.07);
+  }
+  .modal-header-left { display: flex; align-items: center; gap: 12px; }
+  .header-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: rgba(153,60,29,0.18); border: 0.5px solid rgba(153,60,29,0.3);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .modal-title { font-size: 17px; font-weight: 700; color: #f0ebe6; letter-spacing: -0.01em; }
+  .modal-subtitle { font-size: 11px; color: rgba(196,112,62,0.6); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 1px; }
+  .close-btn {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: rgba(255,255,255,0.06); border: 0.5px solid rgba(255,255,255,0.1);
+    color: rgba(240,235,230,0.5); font-size: 14px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .close-btn:hover { background: rgba(153,60,29,0.2); color: #c4703e; border-color: rgba(153,60,29,0.3); }
+
+  /* Body */
+  .modal-body { padding: 24px; display: flex; flex-direction: column; gap: 28px; }
+
+  /* Section */
+  .section-label {
+    font-size: 10px; font-weight: 400; letter-spacing: 0.16em;
+    text-transform: uppercase; color: rgba(196,112,62,0.55);
+    margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+  }
+  .section-label::after {
+    content: ''; flex: 1; height: 0.5px; background: rgba(255,255,255,0.07);
+  }
+
+  /* Toggle group */
+  .toggle-group {
+    display: flex; gap: 6px;
+    background: rgba(0,0,0,0.2); border-radius: 12px; padding: 4px;
+  }
+  .toggle-btn {
+    flex: 1; padding: 10px 0; border-radius: 9px; border: none;
+    font-size: 13px; font-family: Georgia, serif; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: all 0.18s; color: rgba(240,235,230,0.4); background: transparent;
+  }
+  .toggle-btn.active {
+    background: #444441; color: #f0ebe6;
+    border: 0.5px solid rgba(153,60,29,0.35);
+  }
+  .toggle-btn svg { width: 14px; height: 14px; }
+
+  /* Font scale */
+  .scale-group { display: flex; gap: 6px; }
+  .scale-btn {
+    flex: 1; padding: 10px 0; border-radius: 9px;
+    background: rgba(0,0,0,0.2); border: 0.5px solid transparent;
+    color: rgba(240,235,230,0.4); font-size: 13px; font-family: Georgia, serif;
+    cursor: pointer; transition: all 0.18s; text-align: center;
+  }
+  .scale-btn.active {
+    background: rgba(153,60,29,0.18); border-color: rgba(153,60,29,0.45);
+    color: #c4703e;
+  }
+  .scale-btn:hover:not(.active) { background: rgba(255,255,255,0.05); color: rgba(240,235,230,0.7); }
+  .scale-hint { font-size: 11px; color: rgba(240,235,230,0.25); margin-top: 8px; font-style: italic; }
+
+  /* Toggle row */
+  .toggle-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px; border-radius: 12px;
+    background: rgba(0,0,0,0.15); border: 0.5px solid rgba(255,255,255,0.05);
+    transition: border-color 0.15s;
+  }
+  .toggle-row:hover { border-color: rgba(153,60,29,0.2); }
+  .toggle-row-info { display: flex; flex-direction: column; gap: 2px; }
+  .toggle-row-label { font-size: 14px; color: #f0ebe6; }
+  .toggle-row-desc { font-size: 11px; color: rgba(240,235,230,0.35); }
+
+  .switch { position: relative; width: 40px; height: 22px; }
+  .switch input { display: none; }
+  .slider-track {
+    position: absolute; inset: 0; border-radius: 11px;
+    background: rgba(255,255,255,0.1); border: 0.5px solid rgba(255,255,255,0.1);
+    cursor: pointer; transition: background 0.2s;
+  }
+  .slider-track::after {
+    content: ''; position: absolute;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: rgba(240,235,230,0.5); top: 2px; left: 2px;
+    transition: transform 0.2s, background 0.2s;
+  }
+  .switch input:checked + .slider-track { background: #993C1D; border-color: #993C1D; }
+  .switch input:checked + .slider-track::after { transform: translateX(18px); background: #f5e8e2; }
+
+  /* Danger zone */
+  .danger-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 16px; border-radius: 12px;
+    background: rgba(153,60,29,0.08); border: 0.5px solid rgba(153,60,29,0.2);
+    cursor: pointer; transition: all 0.18s;
+  }
+  .danger-row:hover { background: rgba(153,60,29,0.15); border-color: rgba(153,60,29,0.4); }
+  .danger-label { font-size: 14px; color: #c4703e; }
+  .danger-desc { font-size: 11px; color: rgba(196,112,62,0.45); margin-top: 2px; }
+  .danger-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: rgba(153,60,29,0.15); border: 0.5px solid rgba(153,60,29,0.3);
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* Footer */
+  .modal-footer {
+    padding: 14px 24px;
+    border-top: 0.5px solid rgba(255,255,255,0.06);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .footer-version { font-size: 10px; color: rgba(240,235,230,0.2); letter-spacing: 0.12em; text-transform: uppercase; }
+  .save-btn {
+    padding: 9px 24px; border-radius: 10px; border: none;
+    background: #993C1D; color: #f5e8e2; font-size: 13px;
+    font-family: Georgia, serif; cursor: pointer; letter-spacing: 0.03em;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .save-btn:hover { background: #b34520; }
+  .save-btn:active { transform: scale(0.97); }
+</style>
+
+<div class="overlay">
+  <div class="modal">
+
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="header-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <circle cx="8" cy="8" r="2.5" stroke="#993C1D" stroke-width="1.5"/>
+            <path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41" stroke="#993C1D" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <div class="modal-title">Interface settings</div>
+          <div class="modal-subtitle">Elix preferences</div>
+        </div>
+      </div>
+      <button class="close-btn">&#x2715;</button>
+    </div>
+
+    <div class="modal-body">
+
+      <div>
+        <div class="section-label">Visual theme</div>
+        <div class="toggle-group">
+          <button class="toggle-btn active">
+            <svg viewBox="0 0 14 14" fill="none"><path d="M7 1a6 6 0 1 0 5.2 9A4.5 4.5 0 0 1 7 1z" fill="#993C1D"/></svg>
+            Dark
+          </button>
+          <button class="toggle-btn">
+            <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="3" stroke="currentColor" stroke-width="1.2"/><path d="M7 1v1.5M7 11.5V13M1 7h1.5M11.5 7H13M3.1 3.1l1.1 1.1M9.8 9.8l1.1 1.1M3.1 10.9l1.1-1.1M9.8 4.2l1.1-1.1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            Light
+          </button>
+          <button class="toggle-btn">
+            <svg viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="5.5" height="12" rx="1" fill="currentColor" opacity="0.5"/><rect x="7.5" y="1" width="5.5" height="12" rx="1" stroke="currentColor" stroke-width="1.2"/></svg>
+            System
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-label">Font scaling</div>
+        <div class="scale-group">
+          <button class="scale-btn" style="font-size:11px;">Aa<br><span style="font-size:10px;opacity:0.5">Small</span></button>
+          <button class="scale-btn active" style="font-size:13px;">Aa<br><span style="font-size:10px;">Medium</span></button>
+          <button class="scale-btn" style="font-size:15px;">Aa<br><span style="font-size:10px;opacity:0.5">Large</span></button>
+        </div>
+        <div class="scale-hint">* Affects the entire workspace typography</div>
+      </div>
+
+      <div>
+        <div class="section-label">Preferences</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="toggle-row">
+            <div class="toggle-row-info">
+              <div class="toggle-row-label">Auto-enhance on paste</div>
+              <div class="toggle-row-desc">Instantly refine prompts when pasted</div>
+            </div>
+            <label class="switch"><input type="checkbox" checked><div class="slider-track"></div></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-row-info">
+              <div class="toggle-row-label">Save prompt history</div>
+              <div class="toggle-row-desc">Store refined prompts locally</div>
+            </div>
+            <label class="switch"><input type="checkbox" checked><div class="slider-track"></div></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-row-info">
+              <div class="toggle-row-label">Show diff view</div>
+              <div class="toggle-row-desc">Highlight changes after enhancement</div>
+            </div>
+            <label class="switch"><input type="checkbox"><div class="slider-track"></div></label>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-label">System actions</div>
+        <div class="danger-row">
+          <div>
+            <div class="danger-label">Clear all history</div>
+            <div class="danger-desc">Permanently removes all saved prompts</div>
+          </div>
+          <div class="danger-icon">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M2 3.5h10M5.5 3.5V2.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v1M5.5 6v4M8.5 6v4M3 3.5l.7 7.5a.5.5 0 0 0 .5.5h5.6a.5.5 0 0 0 .5-.5L11 3.5" stroke="#993C1D" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="modal-footer">
+      <div class="footer-version">Elix · v1.4.1</div>
+      <button class="save-btn">Save changes</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.toggle-group').forEach(group => {
+    group.querySelectorAll('.toggle-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        group.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+  });
+  document.querySelectorAll('.scale-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+</script>

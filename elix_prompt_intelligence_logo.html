@@ -1,0 +1,209 @@
+<style>
+  @keyframes slideLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scaleY(0);
+    }
+    to {
+      opacity: 1;
+      transform: scaleY(1);
+    }
+  }
+  @keyframes spinIn {
+    from {
+      opacity: 0;
+      transform: rotate(-15deg) scale(0.7);
+    }
+    to {
+      opacity: 1;
+      transform: rotate(0) scale(1);
+    }
+  }
+  @keyframes popDot {
+    0% {
+      transform: translateX(-50%) scale(0);
+      opacity: 0;
+    }
+    75% {
+      transform: translateX(-50%) scale(1.4);
+    }
+    100% {
+      transform: translateX(-50%) scale(1);
+      opacity: 1;
+    }
+  }
+  @keyframes growLine {
+    from {
+      width: 0;
+    }
+    to {
+      width: 100%;
+    }
+  }
+  @keyframes fadeTag {
+    from {
+      opacity: 0;
+      letter-spacing: 0.38em;
+    }
+    to {
+      opacity: 0.7;
+      letter-spacing: 0.22em;
+    }
+  }
+
+  .letter-E {
+    animation: slideLeft 0.55s cubic-bezier(0.4, 0, 0.2, 1) 0.1s both;
+    display: inline-block;
+  }
+  .letter-l {
+    animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.28s both;
+    display: inline-block;
+  }
+  .letter-i {
+    animation: scaleIn 0.45s cubic-bezier(0.4, 0, 0.2, 1) 0.46s both;
+    display: inline-block;
+    transform-origin: center center;
+  }
+  .letter-x {
+    animation: spinIn 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) 0.62s both;
+    display: inline-block;
+  }
+  .i-dot {
+    animation: popDot 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.72s both;
+  }
+  .acc-line {
+    animation: growLine 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.88s both;
+  }
+  .tagline {
+    animation: fadeTag 0.8s ease 1.05s both;
+  }
+</style>
+
+<div
+  style="
+    background: #444441;
+    border-radius: 16px;
+    padding: 64px 72px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 280px;
+  "
+>
+  <div
+    style="
+      display: flex;
+      align-items: baseline;
+      gap: 0;
+      line-height: 1;
+      font-family: &quot;Georgia&quot;, &quot;Times New Roman&quot;, serif;
+    "
+  >
+    <span
+      class="letter-E"
+      style="
+        font-size: 108px;
+        font-weight: 700;
+        color: #993c1d;
+        letter-spacing: -0.02em;
+      "
+      >E</span
+    >
+    <span
+      class="letter-l"
+      style="
+        font-size: 108px;
+        font-weight: 300;
+        color: #c4703e;
+        letter-spacing: -0.02em;
+      "
+      >l</span
+    >
+    <span style="position: relative; display: inline-block">
+      <span
+        class="i-dot"
+        style="
+          position: absolute;
+          top: 15px;
+          left: 50%;
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background: #993c1d;
+          display: block;
+        "
+      ></span>
+      <span
+        class="letter-i"
+        style="
+          font-size: 108px;
+          font-weight: 300;
+          color: #c4703e;
+          letter-spacing: -0.02em;
+          font-style: italic;
+        "
+        >i</span
+      >
+    </span>
+    <span
+      class="letter-x"
+      style="
+        font-size: 108px;
+        font-weight: 700;
+        color: #993c1d;
+        letter-spacing: -0.02em;
+      "
+      >x</span
+    >
+  </div>
+
+  <div
+    class="acc-line"
+    style="
+      height: 1.5px;
+      background: #993c1d;
+      opacity: 0.45;
+      border-radius: 1px;
+      margin-top: 12px;
+      max-width: 380px;
+      width: 100%;
+    "
+  ></div>
+
+  <div
+    class="tagline"
+    style="
+      margin-top: 16px;
+      font-family: &quot;Georgia&quot;, &quot;Times New Roman&quot;, serif;
+      font-size: 13px;
+      font-weight: 400;
+      color: #c4703e;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      opacity: 0.7;
+    "
+  >
+    Prompt intelligence
+  </div>
+</div>

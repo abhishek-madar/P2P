@@ -1,0 +1,127 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Georgia,serif;}
+.overlay{background:rgba(0,0,0,0.6);border-radius:12px;padding:32px;display:flex;justify-content:center;align-items:flex-start;min-height:560px;}
+.modal{background:#2a2620;border-radius:10px;width:100%;max-width:520px;overflow:hidden;border:0.5px solid #3a3530;}
+.modal-header{padding:20px 20px 0;display:flex;align-items:center;justify-content:space-between;}
+.header-left{display:flex;align-items:center;gap:10px;}
+.header-icon{width:32px;height:32px;background:#1e1a15;border-radius:8px;display:flex;align-items:center;justify-content:center;}
+.header-icon svg{stroke:#c0392b;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.header-title{font-size:15px;font-weight:500;color:#e8d5b0;letter-spacing:1px;}
+.header-sub{font-size:10px;color:#7a6a55;margin-top:2px;letter-spacing:1.5px;}
+.close-btn{width:28px;height:28px;background:#1e1a15;border:0.5px solid #3a3530;border-radius:6px;cursor:pointer;color:#7a6a55;font-size:13px;display:flex;align-items:center;justify-content:center;font-family:sans-serif;}
+.close-btn:hover{color:#c0392b;border-color:#c0392b;}
+
+.search-bar{margin:16px 20px 0;display:flex;align-items:center;gap:8px;background:#1e1a15;border:0.5px solid #3a3530;border-radius:6px;padding:8px 12px;}
+.search-bar svg{stroke:#7a6a55;fill:none;stroke-width:1.8;width:13px;height:13px;flex-shrink:0;}
+.search-bar input{background:transparent;border:none;outline:none;color:#c8b89a;font-size:13px;flex:1;font-family:Georgia,serif;}
+.search-bar input::placeholder{color:#5a4a38;}
+
+.filter-row{display:flex;gap:6px;padding:12px 20px 0;}
+.filter-btn{padding:3px 12px;border-radius:20px;font-size:10px;letter-spacing:1px;border:0.5px solid #3a3530;background:transparent;color:#7a6a55;cursor:pointer;font-family:Georgia,serif;}
+.filter-btn.active{background:#1e1a15;border-color:#c0392b;color:#c0392b;}
+.filter-btn:hover{border-color:#c0392b;color:#c0392b;}
+
+.list{padding:12px;display:flex;flex-direction:column;gap:2px;max-height:320px;overflow-y:auto;}
+.list::-webkit-scrollbar{width:3px;}
+.list::-webkit-scrollbar-track{background:transparent;}
+.list::-webkit-scrollbar-thumb{background:#3a3530;border-radius:4px;}
+
+.item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:6px;cursor:pointer;border:0.5px solid transparent;}
+.item:hover{background:#1e1a15;border-color:#3a3530;}
+.item.active{background:#1e1a15;border-color:#3a3530;}
+.badge{padding:2px 8px;border-radius:4px;font-size:9px;font-weight:400;letter-spacing:1.5px;flex-shrink:0;min-width:62px;text-align:center;font-family:Georgia,serif;}
+.badge-enhance{color:#c0392b;}
+.badge-correct{color:#c0392b;}
+.item-dot{width:5px;height:5px;border-radius:1px;background:#c0392b;transform:rotate(45deg);flex-shrink:0;}
+.item-text{font-size:13px;color:#c8b89a;flex:1;font-style:italic;}
+.item-time{font-size:10px;color:#5a4a38;flex-shrink:0;font-family:Georgia,serif;}
+.item-arrow{color:#3a3530;font-size:12px;font-family:sans-serif;}
+.item:hover .item-arrow{color:#7a6a55;}
+
+.divider{height:0.5px;background:#3a3530;margin:6px 12px;}
+
+.modal-footer{padding:14px 20px;border-top:0.5px solid #3a3530;display:flex;align-items:center;justify-content:space-between;}
+.purge-btn{display:flex;align-items:center;gap:6px;background:transparent;border:0.5px solid #3a3530;border-radius:6px;padding:6px 14px;color:#7a6a55;font-size:11px;cursor:pointer;font-family:Georgia,serif;letter-spacing:1px;}
+.purge-btn:hover{border-color:#c0392b;color:#c0392b;}
+.purge-btn svg{stroke:#7a6a55;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;width:12px;height:12px;}
+.purge-btn:hover svg{stroke:#c0392b;}
+.count-txt{font-size:10px;color:#5a4a38;letter-spacing:1px;font-family:Georgia,serif;}
+</style>
+
+<div class="overlay">
+<div class="modal">
+  <div class="modal-header">
+    <div class="header-left">
+      <div class="header-icon">
+        <svg viewBox="0 0 16 16" width="15" height="15"><circle cx="8" cy="8" r="6"/><polyline points="8,5 8,8 10,10"/></svg>
+      </div>
+      <div>
+        <div class="header-title">HISTORY LOG</div>
+        <div class="header-sub">DOCUMENTED REFINEMENTS</div>
+      </div>
+    </div>
+    <button class="close-btn">✕</button>
+  </div>
+
+  <div class="search-bar">
+    <svg viewBox="0 0 16 16"><circle cx="6.5" cy="6.5" r="4"/><line x1="10" y1="10" x2="13" y2="13"/></svg>
+    <input type="text" placeholder="Search history…" />
+  </div>
+
+  <div class="filter-row">
+    <button class="filter-btn active">All</button>
+    <button class="filter-btn">Enhance</button>
+    <button class="filter-btn">Correct</button>
+    <button class="filter-btn">Expand</button>
+  </div>
+
+  <div class="list">
+    <div class="item active">
+      <div class="item-dot"></div>
+      <span class="badge badge-correct">CORRECT</span>
+      <span class="item-text">"space x"</span>
+      <span class="item-time">7 Apr at 03:19 PM</span>
+      <span class="item-arrow">›</span>
+    </div>
+    <div class="item">
+      <div class="item-dot"></div>
+      <span class="badge badge-correct">CORRECT</span>
+      <span class="item-text">"space"</span>
+      <span class="item-time">7 Apr at 03:16 PM</span>
+      <span class="item-arrow">›</span>
+    </div>
+    <div class="divider"></div>
+    <div class="item">
+      <div class="item-dot"></div>
+      <span class="badge badge-enhance">ENHANCE</span>
+      <span class="item-text">"Add context"</span>
+      <span class="item-time">7 Apr at 03:12 PM</span>
+      <span class="item-arrow">›</span>
+    </div>
+    <div class="item">
+      <div class="item-dot"></div>
+      <span class="badge badge-enhance">ENHANCE</span>
+      <span class="item-text">"What is space x"</span>
+      <span class="item-time">7 Apr at 03:08 PM</span>
+      <span class="item-arrow">›</span>
+    </div>
+    <div class="item">
+      <div class="item-dot"></div>
+      <span class="badge badge-enhance">ENHANCE</span>
+      <span class="item-text">"Make more specific"</span>
+      <span class="item-time">7 Apr at 03:01 PM</span>
+      <span class="item-arrow">›</span>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button class="purge-btn">
+      <svg viewBox="0 0 16 16"><polyline points="2,4 14,4"/><path d="M5,4V3a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1V4"/><rect x="3" y="4" width="10" height="10" rx="1"/></svg>
+      PURGE ARCHIVE
+    </button>
+    <span class="count-txt">5 ENTRIES · TODAY</span>
+  </div>
+</div>
+</div>

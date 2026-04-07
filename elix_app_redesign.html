@@ -1,0 +1,191 @@
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .app {
+    background: #2c2b28;
+    min-height: 680px;
+    font-family: 'Georgia', serif;
+    display: flex;
+    flex-direction: column;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  /* Nav */
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 28px;
+    border-bottom: 0.5px solid rgba(255,255,255,0.07);
+  }
+  .nav-logo { display: flex; flex-direction: column; gap: 1px; }
+  .nav-wordmark { font-size: 26px; font-weight: 700; color: #993C1D; letter-spacing: -0.01em; line-height: 1; }
+  .nav-wordmark span { font-weight: 300; color: #c4703e; font-style: italic; }
+  .nav-tagline { font-size: 9px; letter-spacing: 0.18em; color: #c4703e; opacity: 0.55; text-transform: uppercase; font-family: Georgia, serif; }
+  .nav-actions { display: flex; align-items: center; gap: 10px; }
+  .nav-pill {
+    padding: 6px 16px; border-radius: 20px; font-size: 12px; cursor: pointer;
+    font-family: Georgia, serif; letter-spacing: 0.03em;
+  }
+  .nav-pill-ghost { background: transparent; border: 0.5px solid rgba(153,60,29,0.4); color: #c4703e; }
+  .nav-pill-solid { background: #993C1D; border: none; color: #f5e8e2; }
+
+  /* Hero */
+  .hero {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 28px 24px;
+    text-align: center;
+    gap: 10px;
+  }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(153,60,29,0.12); border: 0.5px solid rgba(153,60,29,0.3);
+    border-radius: 20px; padding: 5px 14px;
+    font-size: 11px; color: #c4703e; letter-spacing: 0.08em;
+    text-transform: uppercase; font-family: Georgia, serif;
+    margin-bottom: 8px;
+  }
+  .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: #993C1D; }
+
+  .hero-title {
+    font-size: 36px; font-weight: 700; color: #f0ebe6;
+    line-height: 1.2; letter-spacing: -0.02em; max-width: 480px;
+  }
+  .hero-title em { color: #993C1D; font-style: normal; }
+
+  .hero-sub {
+    font-size: 14px; color: rgba(240,235,230,0.45);
+    letter-spacing: 0.04em; text-transform: uppercase;
+    font-weight: 400; margin-top: 2px;
+  }
+
+  /* Suggestion chips */
+  .chips {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    justify-content: center; margin: 20px 0 8px;
+  }
+  .chip {
+    padding: 8px 16px; border-radius: 20px;
+    background: rgba(255,255,255,0.05);
+    border: 0.5px solid rgba(255,255,255,0.1);
+    color: rgba(240,235,230,0.65); font-size: 13px;
+    cursor: pointer; transition: all 0.18s;
+    font-family: Georgia, serif;
+  }
+  .chip:hover { background: rgba(153,60,29,0.15); border-color: rgba(153,60,29,0.4); color: #c4703e; }
+
+  /* Input area */
+  .input-area {
+    padding: 0 28px 28px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+
+  .input-box {
+    background: rgba(255,255,255,0.05);
+    border: 0.5px solid rgba(255,255,255,0.12);
+    border-radius: 14px;
+    padding: 16px 18px;
+    display: flex; align-items: flex-end; gap: 12px;
+    transition: border-color 0.2s;
+  }
+  .input-box:focus-within {
+    border-color: rgba(153,60,29,0.5);
+  }
+
+  .input-box textarea {
+    flex: 1; background: transparent; border: none; outline: none;
+    color: #f0ebe6; font-size: 15px; font-family: Georgia, serif;
+    resize: none; min-height: 52px; line-height: 1.6;
+    placeholder-color: rgba(240,235,230,0.3);
+  }
+  .input-box textarea::placeholder { color: rgba(240,235,230,0.3); }
+
+  .send-btn {
+    width: 38px; height: 38px; border-radius: 10px;
+    background: #993C1D; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: background 0.15s, transform 0.1s;
+  }
+  .send-btn:hover { background: #b34520; }
+  .send-btn:active { transform: scale(0.95); }
+
+  .input-meta {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 4px;
+  }
+  .input-meta-left { display: flex; gap: 8px; }
+  .meta-chip {
+    padding: 4px 12px; border-radius: 12px; font-size: 11px;
+    background: rgba(255,255,255,0.05); border: 0.5px solid rgba(255,255,255,0.08);
+    color: rgba(240,235,230,0.4); cursor: pointer; font-family: Georgia, serif;
+    letter-spacing: 0.04em; transition: all 0.15s;
+  }
+  .meta-chip:hover { color: #c4703e; border-color: rgba(153,60,29,0.3); }
+  .meta-chip.active { background: rgba(153,60,29,0.12); border-color: rgba(153,60,29,0.3); color: #c4703e; }
+
+  .footer-note {
+    font-size: 10px; color: rgba(240,235,230,0.25);
+    letter-spacing: 0.1em; text-transform: uppercase; font-family: Georgia, serif;
+  }
+</style>
+
+<div class="app">
+
+  <nav class="nav">
+    <div class="nav-logo">
+      <div class="nav-wordmark">El<span>i</span>x</div>
+      <div class="nav-tagline">Prompt intelligence</div>
+    </div>
+    <div class="nav-actions">
+      <button class="nav-pill nav-pill-ghost">History</button>
+      <button class="nav-pill nav-pill-solid">New prompt</button>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <div class="badge">
+      <span class="badge-dot"></span>
+      AI-powered refinement
+    </div>
+
+    <h1 class="hero-title">What prompt are you <em>crafting</em> today?</h1>
+    <p class="hero-sub">Describe your concept &amp; Elix will enhance it</p>
+
+    <div class="chips">
+      <div class="chip">Improve clarity</div>
+      <div class="chip">Add context</div>
+      <div class="chip">Make more specific</div>
+      <div class="chip">Fix grammar</div>
+      <div class="chip">Expand scope</div>
+    </div>
+  </div>
+
+  <div class="input-area">
+    <div class="input-box">
+      <textarea placeholder="Paste or write your prompt here — Elix will refine and enhance it for you..."></textarea>
+      <button class="send-btn">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M8 13V3M3 8l5-5 5 5" stroke="#f5e8e2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="input-meta">
+      <div class="input-meta-left">
+        <div class="meta-chip active">Enhance</div>
+        <div class="meta-chip">Correct</div>
+        <div class="meta-chip">Expand</div>
+        <div class="meta-chip">Compress</div>
+      </div>
+      <div class="footer-note">Elix AI · Prompt intelligence</div>
+    </div>
+  </div>
+
+</div>
