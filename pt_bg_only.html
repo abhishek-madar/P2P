@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:600px;overflow:hidden;background:#000}
+#scene{position:relative;width:100%;height:600px;overflow:hidden}
+
+#pt{
+  position:absolute;inset:0;
+  display:grid;
+  grid-template-columns:repeat(18,1fr);
+  grid-template-rows:repeat(10,1fr);
+  gap:2px;padding:2px;
+}
+.e{
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:2px;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:1px;overflow:hidden;
+  animation:pulse linear infinite;
+  transition:all 0.2s;
+}
+.e:hover{
+  transform:scale(1.25);z-index:50;
+  border-color:rgba(57,211,83,0.7);
+  box-shadow:0 0 16px rgba(57,211,83,0.6);
+  filter:brightness(2);
+}
+@keyframes pulse{0%,100%{opacity:var(--b,.45)}50%{opacity:var(--p,.8)}}
+.n{font-family:'Courier New',monospace;font-size:clamp(4px,.55vw,7px);color:rgba(255,255,255,.6);line-height:1}
+.s{font-family:'Times New Roman',serif;font-size:clamp(8px,1.2vw,14px);font-weight:bold;color:#fff;line-height:1.1;text-shadow:0 0 6px rgba(255,255,255,.35)}
+.nm{font-family:'Courier New',monospace;font-size:clamp(3px,.4vw,5px);color:rgba(255,255,255,.45);line-height:1;white-space:nowrap;overflow:hidden;max-width:100%}
+.ms{font-family:'Courier New',monospace;font-size:clamp(3px,.38vw,5px);color:rgba(255,255,255,.35);line-height:1}
+
+.alkali{background:rgba(180,40,40,.28)}
+.alkaline{background:rgba(180,100,20,.28)}
+.transition{background:rgba(40,80,180,.28)}
+.post{background:rgba(40,140,100,.28)}
+.metalloid{background:rgba(100,140,40,.28)}
+.nonmetal{background:rgba(20,140,140,.28)}
+.halogen{background:rgba(120,40,160,.28)}
+.noble{background:rgba(160,130,0,.28)}
+.lanthanide{background:rgba(40,100,160,.28)}
+.actinide{background:rgba(160,40,120,.28)}
+.unknown{background:rgba(60,60,60,.25)}
+.bb{background:rgba(57,211,83,.22)!important;border:1.5px solid rgba(57,211,83,.55)!important;box-shadow:0 0 10px rgba(57,211,83,.4)!important}
+
+.fl{animation:flash .35s ease forwards!important}
+@keyframes flash{0%{filter:brightness(1)}50%{filter:brightness(4);border-color:rgba(57,211,83,.9);box-shadow:0 0 20px rgba(57,211,83,.8)}100%{filter:brightness(1)}}
+
+/* scanline */
+#sl{
+  position:absolute;top:0;left:0;right:0;height:2px;z-index:10;pointer-events:none;
+  background:linear-gradient(90deg,transparent 0%,rgba(57,211,83,.45) 30%,rgba(57,211,83,1) 50%,rgba(57,211,83,.45) 70%,transparent 100%);
+  box-shadow:0 0 14px rgba(57,211,83,.8),0 0 28px rgba(57,211,83,.3);
+  animation:sd 3.5s linear infinite;
+}
+@keyframes sd{0%{top:-3px;opacity:0}5%{opacity:1}95%{opacity:1}100%{top:100%;opacity:0}}
+
+/* horizontal wave */
+#hw{position:absolute;top:0;left:-30%;width:30%;height:100%;z-index:5;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(57,211,83,.03),transparent);animation:hw 5s linear infinite}
+@keyframes hw{from{left:-30%}to{left:130%}}
+
+/* center glow */
+#cg{position:absolute;inset:0;z-index:6;pointer-events:none;background:radial-gradient(ellipse 55% 45% at 50% 50%,rgba(57,211,83,.06) 0%,transparent 68%);animation:cgp 4s ease-in-out infinite}
+@keyframes cgp{0%,100%{opacity:.5}50%{opacity:1}}
+
+/* vignette */
+#vg{position:absolute;inset:0;z-index:8;pointer-events:none;background:radial-gradient(ellipse at center,rgba(0,0,0,.08) 25%,rgba(0,0,0,.78) 100%)}
+
+/* atoms */
+.atom{position:absolute;border-radius:50%;pointer-events:none;z-index:7;animation:af linear infinite}
+@keyframes af{0%{opacity:0;transform:translate(0,0) scale(1)}15%{opacity:var(--ao,.5)}85%{opacity:var(--ao,.5)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.15)}}
+
+/* ripple */
+.rip{position:fixed;border-radius:50%;pointer-events:none;z-index:99;border:2px solid rgba(57,211,83,.65);animation:ro .65s ease forwards}
+@keyframes ro{from{width:0;height:0;opacity:1;transform:translate(-50%,-50%)}to{width:100px;height:100px;opacity:0;transform:translate(-50%,-50%)}}
+</style>
+</head>
+<body>
+<div id="scene">
+  <div id="pt"></div>
+  <div id="sl"></div>
+  <div id="hw"></div>
+  <div id="cg"></div>
+  <div id="atoms"></div>
+  <div id="vg"></div>
+</div>
+
+<script>
+const D=[
+  {n:1,s:'H',nm:'Hydrogen',m:'1.008',c:'nonmetal',col:1,r:1},{n:2,s:'He',nm:'Helium',m:'4.003',c:'noble',col:18,r:1},
+  {n:3,s:'Li',nm:'Lithium',m:'6.941',c:'alkali',col:1,r:2},{n:4,s:'Be',nm:'Beryllium',m:'9.012',c:'alkaline',col:2,r:2},
+  {n:5,s:'B',nm:'Boron',m:'10.81',c:'metalloid',col:13,r:2},{n:6,s:'C',nm:'Carbon',m:'12.01',c:'nonmetal',col:14,r:2},
+  {n:7,s:'N',nm:'Nitrogen',m:'14.01',c:'nonmetal',col:15,r:2},{n:8,s:'O',nm:'Oxygen',m:'16.00',c:'nonmetal',col:16,r:2},
+  {n:9,s:'F',nm:'Fluorine',m:'19.00',c:'halogen',col:17,r:2},{n:10,s:'Ne',nm:'Neon',m:'20.18',c:'noble',col:18,r:2},
+  {n:11,s:'Na',nm:'Sodium',m:'22.99',c:'alkali',col:1,r:3},{n:12,s:'Mg',nm:'Magnesium',m:'24.31',c:'alkaline',col:2,r:3},
+  {n:13,s:'Al',nm:'Aluminum',m:'26.98',c:'post',col:13,r:3},{n:14,s:'Si',nm:'Silicon',m:'28.09',c:'metalloid',col:14,r:3},
+  {n:15,s:'P',nm:'Phosphorus',m:'30.97',c:'nonmetal',col:15,r:3},{n:16,s:'S',nm:'Sulfur',m:'32.07',c:'nonmetal',col:16,r:3},
+  {n:17,s:'Cl',nm:'Chlorine',m:'35.45',c:'halogen',col:17,r:3},{n:18,s:'Ar',nm:'Argon',m:'39.95',c:'noble',col:18,r:3},
+  {n:19,s:'K',nm:'Potassium',m:'39.10',c:'alkali',col:1,r:4},{n:20,s:'Ca',nm:'Calcium',m:'40.08',c:'alkaline',col:2,r:4},
+  {n:21,s:'Sc',nm:'Scandium',m:'44.96',c:'transition',col:3,r:4},{n:22,s:'Ti',nm:'Titanium',m:'47.87',c:'transition',col:4,r:4},
+  {n:23,s:'V',nm:'Vanadium',m:'50.94',c:'transition',col:5,r:4},{n:24,s:'Cr',nm:'Chromium',m:'52.00',c:'transition',col:6,r:4},
+  {n:25,s:'Mn',nm:'Manganese',m:'54.94',c:'transition',col:7,r:4},{n:26,s:'Fe',nm:'Iron',m:'55.85',c:'transition',col:8,r:4},
+  {n:27,s:'Co',nm:'Cobalt',m:'58.93',c:'transition',col:9,r:4},{n:28,s:'Ni',nm:'Nickel',m:'58.69',c:'transition',col:10,r:4},
+  {n:29,s:'Cu',nm:'Copper',m:'63.55',c:'transition',col:11,r:4},{n:30,s:'Zn',nm:'Zinc',m:'65.38',c:'transition',col:12,r:4},
+  {n:31,s:'Ga',nm:'Gallium',m:'69.72',c:'post',col:13,r:4},{n:32,s:'Ge',nm:'Germanium',m:'72.63',c:'metalloid',col:14,r:4},
+  {n:33,s:'As',nm:'Arsenic',m:'74.92',c:'metalloid',col:15,r:4},{n:34,s:'Se',nm:'Selenium',m:'78.97',c:'nonmetal',col:16,r:4},
+  {n:35,s:'Br',nm:'Bromine',m:'79.90',c:'halogen',col:17,r:4},{n:36,s:'Kr',nm:'Krypton',m:'83.80',c:'noble',col:18,r:4},
+  {n:37,s:'Rb',nm:'Rubidium',m:'85.47',c:'alkali',col:1,r:5},{n:38,s:'Sr',nm:'Strontium',m:'87.62',c:'alkaline',col:2,r:5},
+  {n:39,s:'Y',nm:'Yttrium',m:'88.91',c:'transition',col:3,r:5},{n:40,s:'Zr',nm:'Zirconium',m:'91.22',c:'transition',col:4,r:5},
+  {n:41,s:'Nb',nm:'Niobium',m:'92.91',c:'transition',col:5,r:5},{n:42,s:'Mo',nm:'Molybdenum',m:'95.96',c:'transition',col:6,r:5},
+  {n:43,s:'Tc',nm:'Technetium',m:'(98)',c:'transition',col:7,r:5},{n:44,s:'Ru',nm:'Ruthenium',m:'101.1',c:'transition',col:8,r:5},
+  {n:45,s:'Rh',nm:'Rhodium',m:'102.9',c:'transition',col:9,r:5},{n:46,s:'Pd',nm:'Palladium',m:'106.4',c:'transition',col:10,r:5},
+  {n:47,s:'Ag',nm:'Silver',m:'107.9',c:'transition',col:11,r:5},{n:48,s:'Cd',nm:'Cadmium',m:'112.4',c:'transition',col:12,r:5},
+  {n:49,s:'In',nm:'Indium',m:'114.8',c:'post',col:13,r:5},{n:50,s:'Sn',nm:'Tin',m:'118.7',c:'post',col:14,r:5},
+  {n:51,s:'Sb',nm:'Antimony',m:'121.8',c:'metalloid',col:15,r:5},{n:52,s:'Te',nm:'Tellurium',m:'127.6',c:'metalloid',col:16,r:5},
+  {n:53,s:'I',nm:'Iodine',m:'126.9',c:'halogen',col:17,r:5},{n:54,s:'Xe',nm:'Xenon',m:'131.3',c:'noble',col:18,r:5},
+  {n:55,s:'Cs',nm:'Cesium',m:'132.9',c:'alkali',col:1,r:6},{n:56,s:'Ba',nm:'Barium',m:'137.3',c:'alkaline',col:2,r:6},
+  {n:57,s:'La',nm:'Lanthanum',m:'138.9',c:'lanthanide',col:3,r:6},{n:72,s:'Hf',nm:'Hafnium',m:'178.5',c:'transition',col:4,r:6},
+  {n:73,s:'Ta',nm:'Tantalum',m:'180.9',c:'transition',col:5,r:6},{n:74,s:'W',nm:'Tungsten',m:'183.8',c:'transition',col:6,r:6},
+  {n:75,s:'Re',nm:'Rhenium',m:'186.2',c:'transition',col:7,r:6},{n:76,s:'Os',nm:'Osmium',m:'190.2',c:'transition',col:8,r:6},
+  {n:77,s:'Ir',nm:'Iridium',m:'192.2',c:'transition',col:9,r:6},{n:78,s:'Pt',nm:'Platinum',m:'195.1',c:'transition',col:10,r:6},
+  {n:79,s:'Au',nm:'Gold',m:'197.0',c:'transition',col:11,r:6},{n:80,s:'Hg',nm:'Mercury',m:'200.6',c:'transition',col:12,r:6},
+  {n:81,s:'Tl',nm:'Thallium',m:'204.4',c:'post',col:13,r:6},{n:82,s:'Pb',nm:'Lead',m:'207.2',c:'post',col:14,r:6},
+  {n:83,s:'Bi',nm:'Bismuth',m:'209.0',c:'post',col:15,r:6},{n:84,s:'Po',nm:'Polonium',m:'(209)',c:'post',col:16,r:6},
+  {n:85,s:'At',nm:'Astatine',m:'(210)',c:'halogen',col:17,r:6},{n:86,s:'Rn',nm:'Radon',m:'(222)',c:'noble',col:18,r:6},
+  {n:87,s:'Fr',nm:'Francium',m:'(223)',c:'alkali',col:1,r:7},{n:88,s:'Ra',nm:'Radium',m:'(226)',c:'alkaline',col:2,r:7},
+  {n:89,s:'Ac',nm:'Actinium',m:'(227)',c:'actinide',col:3,r:7},{n:104,s:'Rf',nm:'Rutherford.',m:'(267)',c:'transition',col:4,r:7},
+  {n:105,s:'Db',nm:'Dubnium',m:'(268)',c:'transition',col:5,r:7},{n:106,s:'Sg',nm:'Seaborgium',m:'(271)',c:'transition',col:6,r:7},
+  {n:107,s:'Bh',nm:'Bohrium',m:'(272)',c:'transition',col:7,r:7},{n:108,s:'Hs',nm:'Hassium',m:'(270)',c:'transition',col:8,r:7},
+  {n:109,s:'Mt',nm:'Meitnerium',m:'(278)',c:'unknown',col:9,r:7},{n:110,s:'Ds',nm:'Darmstadt.',m:'(281)',c:'unknown',col:10,r:7},
+  {n:111,s:'Rg',nm:'Roentgen.',m:'(282)',c:'unknown',col:11,r:7},{n:112,s:'Cn',nm:'Copernic.',m:'(285)',c:'transition',col:12,r:7},
+  {n:113,s:'Nh',nm:'Nihonium',m:'(286)',c:'unknown',col:13,r:7},{n:114,s:'Fl',nm:'Flerovium',m:'(289)',c:'unknown',col:14,r:7},
+  {n:115,s:'Mc',nm:'Moscovium',m:'(290)',c:'unknown',col:15,r:7},{n:116,s:'Lv',nm:'Livermore.',m:'(293)',c:'unknown',col:16,r:7},
+  {n:117,s:'Ts',nm:'Tennessine',m:'(294)',c:'unknown',col:17,r:7},{n:118,s:'Og',nm:'Oganesson',m:'(294)',c:'unknown',col:18,r:7},
+  {n:58,s:'Ce',nm:'Cerium',m:'140.1',c:'lanthanide',col:4,r:9},{n:59,s:'Pr',nm:'Praseodym.',m:'140.9',c:'lanthanide',col:5,r:9},
+  {n:60,s:'Nd',nm:'Neodymium',m:'144.2',c:'lanthanide',col:6,r:9},{n:61,s:'Pm',nm:'Promethium',m:'(145)',c:'lanthanide',col:7,r:9},
+  {n:62,s:'Sm',nm:'Samarium',m:'150.4',c:'lanthanide',col:8,r:9},{n:63,s:'Eu',nm:'Europium',m:'152.0',c:'lanthanide',col:9,r:9},
+  {n:64,s:'Gd',nm:'Gadolinium',m:'157.3',c:'lanthanide',col:10,r:9},{n:65,s:'Tb',nm:'Terbium',m:'158.9',c:'lanthanide',col:11,r:9},
+  {n:66,s:'Dy',nm:'Dysprosium',m:'162.5',c:'lanthanide',col:12,r:9},{n:67,s:'Ho',nm:'Holmium',m:'164.9',c:'lanthanide',col:13,r:9},
+  {n:68,s:'Er',nm:'Erbium',m:'167.3',c:'lanthanide',col:14,r:9},{n:69,s:'Tm',nm:'Thulium',m:'168.9',c:'lanthanide',col:15,r:9},
+  {n:70,s:'Yb',nm:'Ytterbium',m:'173.0',c:'lanthanide',col:16,r:9},{n:71,s:'Lu',nm:'Lutetium',m:'175.0',c:'lanthanide',col:17,r:9},
+  {n:90,s:'Th',nm:'Thorium',m:'232.0',c:'actinide',col:4,r:10},{n:91,s:'Pa',nm:'Protactin.',m:'231.0',c:'actinide',col:5,r:10},
+  {n:92,s:'U',nm:'Uranium',m:'238.0',c:'actinide',col:6,r:10},{n:93,s:'Np',nm:'Neptunium',m:'(237)',c:'actinide',col:7,r:10},
+  {n:94,s:'Pu',nm:'Plutonium',m:'(244)',c:'actinide',col:8,r:10},{n:95,s:'Am',nm:'Americium',m:'(243)',c:'actinide',col:9,r:10},
+  {n:96,s:'Cm',nm:'Curium',m:'(247)',c:'actinide',col:10,r:10},{n:97,s:'Bk',nm:'Berkelium',m:'(247)',c:'actinide',col:11,r:10},
+  {n:98,s:'Cf',nm:'Californium',m:'(251)',c:'actinide',col:12,r:10},{n:99,s:'Es',nm:'Einsteinium',m:'(252)',c:'actinide',col:13,r:10},
+  {n:100,s:'Fm',nm:'Fermium',m:'(257)',c:'actinide',col:14,r:10},{n:101,s:'Md',nm:'Mendelev.',m:'(258)',c:'actinide',col:15,r:10},
+  {n:102,s:'No',nm:'Nobelium',m:'(259)',c:'actinide',col:16,r:10},{n:103,s:'Lr',nm:'Lawrencium',m:'(266)',c:'actinide',col:17,r:10},
+];
+
+// Build grid
+const pt=document.getElementById('pt');
+const map={};D.forEach(e=>{map[`${e.r}-${e.col}`]=e});
+const dvs={};
+for(let r=1;r<=10;r++){
+  for(let c=1;c<=18;c++){
+    const e=map[`${r}-${c}`];
+    const d=document.createElement('div');
+    d.style.gridColumn=c;d.style.gridRow=r;
+    if(e){
+      const bb=(e.n===35||e.n===56);
+      d.className=`e ${e.c}${bb?' bb':''}`;
+      d.style.setProperty('--b',(0.35+Math.random()*.2).toFixed(2));
+      d.style.setProperty('--p',(0.7+Math.random()*.2).toFixed(2));
+      d.style.animationDuration=(Math.random()*4+2).toFixed(1)+'s';
+      d.style.animationDelay=(Math.random()*4).toFixed(1)+'s';
+      d.innerHTML=`<span class="n">${e.n}</span><span class="s">${e.s}</span><span class="nm">${e.nm}</span><span class="ms">${e.m}</span>`;
+      dvs[e.n]=d;
+    } else {
+      d.className='e';d.style.cssText='background:transparent;border:none';
+    }
+    pt.appendChild(d);
+  }
+}
+
+// Random flash
+const fl=D.filter(e=>e.n!==35&&e.n!==56);
+function rf(){
+  const e=fl[Math.floor(Math.random()*fl.length)];
+  const d=dvs[e.n];
+  if(d){d.classList.add('fl');setTimeout(()=>d.classList.remove('fl'),360)}
+  setTimeout(rf,Math.random()*450+120);
+}
+setTimeout(rf,300);
+
+// Column wave
+function cw(){
+  for(let c=1;c<=18;c++){
+    setTimeout(()=>{
+      D.forEach(e=>{if(e.col===c&&e.n!==35&&e.n!==56){const d=dvs[e.n];if(d){d.style.filter='brightness(3)';setTimeout(()=>{d.style.filter=''},260)}}});
+    },c*65);
+  }
+}
+setInterval(cw,7000);setTimeout(cw,800);
+
+// Row wave
+function rw(){
+  for(let r=1;r<=10;r++){
+    setTimeout(()=>{
+      D.forEach(e=>{if(e.r===r&&e.n!==35&&e.n!==56){const d=dvs[e.n];if(d){d.style.filter='brightness(2.2)';setTimeout(()=>{d.style.filter=''},240)}}});
+    },r*85);
+  }
+}
+setInterval(rw,11000);setTimeout(rw,5000);
+
+// Floating atoms
+const ac=document.getElementById('atoms');
+const cols=['rgba(57,211,83','rgba(255,160,40','rgba(100,160,255','rgba(255,80,80','rgba(200,180,255'];
+function sa(){
+  const a=document.createElement('div');a.className='atom';
+  const sz=Math.random()*9+3,col=cols[Math.floor(Math.random()*cols.length)],op=(Math.random()*.5+.25).toFixed(2);
+  a.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;background:${col},${op});box-shadow:0 0 ${sz*2}px ${col},.5);--dx:${(Math.random()-.5)*220}px;--dy:${(Math.random()-.5)*220}px;--ao:${op};animation-duration:${Math.random()*6+4}s;animation-delay:${Math.random()*2}s`;
+  ac.appendChild(a);setTimeout(()=>a.remove(),9000);
+}
+setInterval(sa,260);
+
+// Click ripple
+document.addEventListener('click',e=>{
+  const r=document.createElement('div');r.className='rip';
+  r.style.left=e.clientX+'px';r.style.top=e.clientY+'px';
+  document.body.appendChild(r);setTimeout(()=>r.remove(),700);
+  // flash random burst on click
+  for(let i=0;i<8;i++){
+    setTimeout(()=>{
+      const el=fl[Math.floor(Math.random()*fl.length)];
+      const d=dvs[el.n];if(d){d.classList.add('fl');setTimeout(()=>d.classList.remove('fl'),360)}
+    },i*40);
+  }
+});
+</script>
+</body></html>

@@ -1,0 +1,422 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Space+Mono:wght@400;700&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0;}
+
+.bb-wrap{
+  background:#0a0c09;
+  font-family:'Space Mono',monospace;
+  color:#e8ead4;
+  min-height:100vh;
+  overflow:hidden;
+}
+
+.nav{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:28px 2rem 20px;
+  border-bottom:0.5px solid rgba(255,255,255,0.08);
+  gap:0;
+}
+.nav-logo{
+  font-family:'Playfair Display',serif;
+  font-size:18px;
+  color:#4ade4a;
+  font-style:italic;
+  margin-right:2.5rem;
+  letter-spacing:-0.02em;
+}
+.nav-link{
+  font-size:11px;
+  letter-spacing:0.12em;
+  color:rgba(232,234,212,0.45);
+  padding:6px 18px;
+  cursor:pointer;
+  transition:color 0.2s;
+  text-decoration:none;
+  text-transform:uppercase;
+}
+.nav-link:hover{color:#e8ead4;}
+.nav-link.active{color:#4ade4a;}
+
+.page-section{
+  padding:3rem 3rem 4rem;
+  animation:fadeUp 0.6s ease both;
+}
+
+.recog-label{
+  font-size:11px;
+  letter-spacing:0.18em;
+  color:rgba(232,234,212,0.35);
+  text-transform:uppercase;
+  margin-bottom:1rem;
+}
+.hero-heading{
+  font-family:'Playfair Display',serif;
+  font-size:52px;
+  font-weight:400;
+  line-height:1.0;
+  margin-bottom:0.5rem;
+  color:#e8ead4;
+}
+.hero-heading span{
+  color:#4ade4a;
+  font-style:italic;
+}
+.accent-line{
+  width:44px;
+  height:2px;
+  background:#4ade4a;
+  margin:1.5rem 0 2.5rem;
+}
+
+.awards-columns{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:3rem;
+}
+.col-label{
+  font-size:11px;
+  letter-spacing:0.16em;
+  color:#4ade4a;
+  text-transform:uppercase;
+  margin-bottom:1rem;
+  padding-bottom:0.75rem;
+  border-bottom:0.5px solid rgba(74,222,74,0.2);
+}
+.award-items{display:flex;flex-direction:column;gap:8px;}
+.award-item{
+  background:rgba(255,255,255,0.03);
+  border:0.5px solid rgba(255,255,255,0.07);
+  border-radius:8px;
+  padding:14px 16px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  cursor:default;
+  transition:background 0.25s, border-color 0.25s, transform 0.25s;
+  opacity:0;
+  transform:translateX(-16px);
+}
+.award-item.visible{
+  animation:slideIn 0.4s ease both;
+}
+.award-item:hover{
+  background:rgba(74,222,74,0.06);
+  border-color:rgba(74,222,74,0.25);
+  transform:translateX(4px);
+}
+.award-icon-wrap{
+  width:36px;
+  height:36px;
+  border-radius:6px;
+  background:rgba(74,222,74,0.08);
+  border:0.5px solid rgba(74,222,74,0.18);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+}
+.award-icon-wrap svg{width:16px;height:16px;}
+.award-name{
+  font-family:'Playfair Display',serif;
+  font-size:14px;
+  font-style:italic;
+  color:#e8ead4;
+  line-height:1.3;
+}
+.award-years{
+  font-size:11px;
+  color:rgba(232,234,212,0.35);
+  letter-spacing:0.06em;
+  margin-top:2px;
+}
+
+.divider{height:0.5px;background:rgba(255,255,255,0.06);margin:0 3rem;}
+
+.metrics-section{padding:3rem 3rem 4rem;}
+.metrics-label{
+  font-size:11px;
+  letter-spacing:0.18em;
+  color:rgba(232,234,212,0.35);
+  text-transform:uppercase;
+  margin-bottom:2.5rem;
+  text-align:center;
+}
+.metrics-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+}
+.metric-card{
+  background:rgba(255,255,255,0.03);
+  border:0.5px solid rgba(255,255,255,0.08);
+  border-radius:12px;
+  padding:28px 24px 24px;
+  position:relative;
+  overflow:hidden;
+  cursor:default;
+  transition:border-color 0.3s, background 0.3s;
+  opacity:0;
+  transform:translateY(20px);
+}
+.metric-card.visible{animation:riseUp 0.5s ease both;}
+.metric-card:hover{
+  border-color:rgba(74,222,74,0.3);
+  background:rgba(74,222,74,0.04);
+}
+.metric-card.featured{
+  border-color:rgba(74,222,74,0.4);
+  background:rgba(74,222,74,0.05);
+}
+.metric-card.featured::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:2px;
+  background:#4ade4a;
+}
+.metric-ref{
+  font-size:10px;
+  letter-spacing:0.1em;
+  color:rgba(232,234,212,0.2);
+  position:absolute;
+  top:14px;right:16px;
+}
+.metric-source{
+  font-size:11px;
+  letter-spacing:0.12em;
+  color:rgba(74,222,74,0.8);
+  text-transform:uppercase;
+  margin-bottom:18px;
+}
+.metric-number{
+  font-family:'Playfair Display',serif;
+  font-size:48px;
+  font-weight:400;
+  line-height:1;
+  color:#e8ead4;
+  display:flex;
+  align-items:baseline;
+  gap:4px;
+}
+.metric-number .unit{
+  font-size:20px;
+  color:rgba(232,234,212,0.5);
+}
+.metric-desc{
+  font-size:12px;
+  color:rgba(232,234,212,0.35);
+  margin-top:12px;
+  font-family:'Space Mono',monospace;
+}
+.corner-text{
+  position:absolute;
+  bottom:12px;
+  right:14px;
+  font-size:9px;
+  letter-spacing:0.14em;
+  color:rgba(232,234,212,0.1);
+  writing-mode:vertical-rl;
+  text-orientation:mixed;
+  text-transform:uppercase;
+}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-16px);}to{opacity:1;transform:translateX(0);}}
+@keyframes riseUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes countUp{from{opacity:0;}to{opacity:1;}}
+
+.counter{display:inline;}
+</style>
+
+<h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);">Breaking Bad Awards and Ratings page — Emmy wins, Golden Globes, and critical ratings.</h2>
+
+<div class="bb-wrap">
+
+  <nav class="nav">
+    <div class="nav-logo">Breaking Bad.</div>
+    <a class="nav-link">Seasons</a>
+    <a class="nav-link">Characters</a>
+    <a class="nav-link active">Awards</a>
+    <a class="nav-link">Dialogues</a>
+  </nav>
+
+  <div class="page-section">
+    <div class="recog-label">Recognition</div>
+    <div class="hero-heading">Awards &amp; <span>Ratings</span></div>
+    <div class="accent-line"></div>
+
+    <div class="awards-columns">
+      <div>
+        <div class="col-label">Emmy awards</div>
+        <div class="award-items" id="emmy-list">
+          <div class="award-item">
+            <div class="award-icon-wrap">
+              <svg viewBox="0 0 16 16" fill="none"><path d="M8 2l1.6 4H14l-3.4 2.6 1.3 4L8 10.2l-3.9 2.4 1.3-4L2 6h4.4z" stroke="#4ade4a" stroke-width="1.2" stroke-linejoin="round"/></svg>
+            </div>
+            <div><div class="award-name">Outstanding Drama Series</div><div class="award-years">2013, 2014</div></div>
+          </div>
+          <div class="award-item">
+            <div class="award-icon-wrap">
+              <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="6" r="4" stroke="#4ade4a" stroke-width="1.2"/><path d="M5 11l.8-2h4.4l.8 2M5.5 14h5" stroke="#4ade4a" stroke-width="1.2" stroke-linecap="round"/></svg>
+            </div>
+            <div><div class="award-name">Lead Actor — Bryan Cranston</div><div class="award-years">2008, 2009, 2010, 2014</div></div>
+          </div>
+          <div class="award-item">
+            <div class="award-icon-wrap">
+              <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="6" r="4" stroke="#4ade4a" stroke-width="1.2"/><path d="M5 11l.8-2h4.4l.8 2M5.5 14h5" stroke="#4ade4a" stroke-width="1.2" stroke-linecap="round"/></svg>
+            </div>
+            <div><div class="award-name">Supporting Actor — Aaron Paul</div><div class="award-years">2010, 2012, 2014</div></div>
+          </div>
+          <div class="award-item">
+            <div class="award-icon-wrap">
+              <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="6" r="4" stroke="#4ade4a" stroke-width="1.2"/><path d="M5 11l.8-2h4.4l.8 2M5.5 14h5" stroke="#4ade4a" stroke-width="1.2" stroke-linecap="round"/></svg>
+            </div>
+            <div><div class="award-name">Supporting Actress — Anna Gunn</div><div class="award-years">2013, 2014</div></div>
+          </div>
+          <div class="award-item">
+            <div class="award-icon-wrap">
+              <svg viewBox="0 0 16 16" fill="none"><path d="M3 4h10M3 8h7M3 12h5" stroke="#4ade4a" stroke-width="1.2" stroke-linecap="round"/></svg>
+            </div>
+            <div><div class="award-name">Outstanding Writing — Drama</div><div class="award-years">2014</div></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="col-label">Other major awards</div>
+        <div class="award-items" id="other-list">
+          <div class="award-item">
+            <div class="award-icon-wrap">
+              <svg viewBox="0 0 16 16" fill="none"><path d="M8 2l1.6 4H14l-3.4 2.6 1.3 4L8 10.2l-3.9 2.4 1.3-4L2 6h4.4z" stroke="#4ade4a" stroke-width="1.2" stroke-linejoin="round"/></svg>
+            </div>
+            <div><div class="award-name">Golden Globe — Best Drama Series</div><div class="award-years">2014</div></div>
+          </div>
+          <div class="award-item">
+            <div class="award-icon-wrap">
+              <svg viewBox="0 0 16 16" fill="none"><path d="M8 2l1.6 4H14l-3.4 2.6 1.3 4L8 10.2l-3.9 2.4 1.3-4L2 6h4.4z" stroke="#4ade4a" stroke-width="1.2" stroke-linejoin="round"/></svg>
+            </div>
+            <div><div class="award-name">Golden Globe — Bryan Cranston</div><div class="award-years">2014</div></div>
+          </div>
+          <div class="award-item">
+            <div class="award-icon-wrap">
+              <svg viewBox="0 0 16 16" fill="none"><rect x="3" y="3" width="10" height="10" rx="2" stroke="#4ade4a" stroke-width="1.2"/><path d="M5.5 8l2 2 3-3" stroke="#4ade4a" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div><div class="award-name">Peabody Award — Excellence</div><div class="award-years">2008</div></div>
+          </div>
+          <div class="award-item">
+            <div class="award-icon-wrap">
+              <svg viewBox="0 0 16 16" fill="none"><path d="M8 2l1.6 4H14l-3.4 2.6 1.3 4L8 10.2l-3.9 2.4 1.3-4L2 6h4.4z" stroke="#4ade4a" stroke-width="1.2" stroke-linejoin="round"/></svg>
+            </div>
+            <div><div class="award-name">Critics' Choice — Best Drama</div><div class="award-years">2013, 2014</div></div>
+          </div>
+          <div class="award-item">
+            <div class="award-icon-wrap">
+              <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5" stroke="#4ade4a" stroke-width="1.2"/><path d="M8 5v3l2 1.5" stroke="#4ade4a" stroke-width="1.2" stroke-linecap="round"/></svg>
+            </div>
+            <div><div class="award-name">SAG Award — Drama Ensemble</div><div class="award-years">2014</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="metrics-section">
+    <div class="metrics-label">Critical metrics &amp; ratings</div>
+    <div class="metrics-grid" id="metrics-grid">
+      <div class="metric-card" data-delay="0">
+        <div class="metric-ref">REF-1000</div>
+        <div class="metric-source">IMDb</div>
+        <div class="metric-number"><span class="counter" data-target="9.5" data-dec="1">0</span><span class="unit">/10</span></div>
+        <div class="metric-desc">Highest rated drama ever</div>
+        <div class="corner-text">Ratified</div>
+      </div>
+      <div class="metric-card featured" data-delay="100">
+        <div class="metric-ref">REF-1001</div>
+        <div class="metric-source">Rotten Tomatoes</div>
+        <div class="metric-number"><span class="counter" data-target="96" data-dec="0">0</span><span class="unit">%</span></div>
+        <div class="metric-desc">Certified Fresh · All seasons</div>
+        <div class="corner-text">Ratified</div>
+      </div>
+      <div class="metric-card" data-delay="200">
+        <div class="metric-ref">REF-1002</div>
+        <div class="metric-source">Metacritic</div>
+        <div class="metric-number"><span class="counter" data-target="99" data-dec="0">0</span><span class="unit">/100</span></div>
+        <div class="metric-desc">Season 5B universal acclaim</div>
+        <div class="corner-text">Ratified</div>
+      </div>
+      <div class="metric-card" data-delay="300">
+        <div class="metric-ref">REF-1003</div>
+        <div class="metric-source">IMDb S5B</div>
+        <div class="metric-number"><span class="counter" data-target="9.9" data-dec="1">0</span><span class="unit">/10</span></div>
+        <div class="metric-desc">Season 5 Part B average</div>
+        <div class="corner-text">Ratified</div>
+      </div>
+      <div class="metric-card" data-delay="400">
+        <div class="metric-ref">REF-1004</div>
+        <div class="metric-source">Audience score</div>
+        <div class="metric-number"><span class="counter" data-target="98" data-dec="0">0</span><span class="unit">%</span></div>
+        <div class="metric-desc">Rotten Tomatoes audience</div>
+        <div class="corner-text">Ratified</div>
+      </div>
+      <div class="metric-card" data-delay="500">
+        <div class="metric-ref">REF-1005</div>
+        <div class="metric-source">Episodes ranked</div>
+        <div class="metric-number" style="font-size:42px;">#1</div>
+        <div class="metric-desc">Ozymandias — best ep. ever</div>
+        <div class="corner-text">Ratified</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  const emmyItems = document.querySelectorAll('#emmy-list .award-item');
+  const otherItems = document.querySelectorAll('#other-list .award-item');
+  emmyItems.forEach((el,i)=>{setTimeout(()=>{el.style.animation=`slideIn 0.4s ease ${i*80}ms both`;el.style.opacity='1';},300+i*80);});
+  otherItems.forEach((el,i)=>{setTimeout(()=>{el.style.animation=`slideIn 0.4s ease ${i*80}ms both`;el.style.opacity='1';},300+i*80);});
+
+  const metricCards = document.querySelectorAll('.metric-card');
+  metricCards.forEach((card)=>{
+    const delay = parseInt(card.dataset.delay||0);
+    setTimeout(()=>{
+      card.style.animation=`riseUp 0.5s ease both`;
+      card.style.opacity='1';
+      card.style.transform='translateY(0)';
+      const counter = card.querySelector('.counter');
+      if(counter && counter.dataset.target){
+        const target = parseFloat(counter.dataset.target);
+        const dec = parseInt(counter.dataset.dec||0);
+        const dur = 900;
+        const start = performance.now();
+        function step(now){
+          const p = Math.min((now-start)/dur,1);
+          const ease = 1-Math.pow(1-p,3);
+          const val = target*ease;
+          counter.textContent = val.toFixed(dec);
+          if(p<1) requestAnimationFrame(step);
+          else counter.textContent = target.toFixed(dec);
+        }
+        requestAnimationFrame(step);
+      }
+    }, 600+delay);
+  });
+
+  document.querySelectorAll('.metric-card').forEach(card=>{
+    card.addEventListener('mouseenter',()=>{
+      const num = card.querySelector('.metric-number');
+      if(num) num.style.color='#4ade4a';
+    });
+    card.addEventListener('mouseleave',()=>{
+      const num = card.querySelector('.metric-number');
+      if(num) num.style.color='#e8ead4';
+    });
+  });
+})();
+</script>
